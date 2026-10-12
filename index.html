@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>냥냥아일랜드 - 고양이 키우기 타이쿤</title>
+<meta name="description" content="외향형 고양이들이 사는 작은 섬. 온천·캠프·풀장·DJ 무대까지, 나만의 고양이 휴양지를 키워 보세요.">
+<meta property="og:title" content="냥냥아일랜드 - 고양이 키우기 타이쿤">
+<meta property="og:description" content="나만의 고양이 휴양지를 키워 보세요.">
+<meta property="og:image" content="img/island.webp">
+<meta name="theme-color" content="#A9D2F0">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Mochiy+Pop+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ground: #FDF6F1;      /* 섬의 땅 색 — 게임 로딩 화면과 같은 크림 */
+    --ground-2: #F6EBDD;
+    --sea: #A9D2F0;
+    --sea-light: #DFF4FF;
+    --ink: #5A4A3A;         /* 게임 UI 글자색 */
+    --ink-deep: #3E2C1F;
+    --sub: #8A7A6A;
+    --amber: #E08A00;
+    --amber-soft: #FFF1C2;
+    --green: #66BB6A;
+    --lav: #E7DAF7;
+    --white: #FFFFFF;
+    --shadow: 0 10px 30px rgba(90, 74, 58, 0.14);
+    --font: "Jua", "Mochiy Pop One", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+  }
+  html[lang="ja"] { --font: "Mochiy Pop One", "Jua", -apple-system, BlinkMacSystemFont, "Hiragino Maru Gothic ProN", sans-serif; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--ground);
+    color: var(--ink);
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+
+  /* 스티커 글자 — 로딩 화면의 "잉크 외곽선 + 흰 채움" */
+  .sticker {
+    color: var(--white);
+    -webkit-text-stroke: 7px var(--ink-deep);
+    paint-order: stroke fill;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── 상단 바 ── */
+  .nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    background: rgba(253, 246, 241, 0.86);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 2px solid rgba(90, 74, 58, 0.08);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand img { width: 38px; height: 38px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+  .brand span { font-size: 20px; color: var(--ink-deep); }
+  .lang { display: flex; gap: 4px; background: var(--ground-2); padding: 4px; border-radius: 999px; }
+  .lang button {
+    font-family: var(--font); font-size: 14px; color: var(--sub);
+    background: none; border: 0; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .lang button[aria-pressed="true"] { background: var(--white); color: var(--ink-deep); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+
+  /* ── 히어로 ── */
+  .hero {
+    position: relative;
+    padding: 96px 16px 0;
+    background: linear-gradient(180deg, var(--sea-light) 0%, var(--ground) 62%);
+    text-align: center;
+  }
+  .hero-icon {
+    width: 120px; height: 120px; margin: 0 auto 18px; border-radius: 28px;
+    box-shadow: 0 12px 28px rgba(90, 74, 58, 0.25);
+    animation: bob 3.2s ease-in-out infinite;
+  }
+  .hero h1 { font-size: clamp(34px, 10vw, 76px); line-height: 1.12; word-break: keep-all; }
+  /* 일본어 이름은 11자라 폰 폭(358px)에 한 줄로 들어가게 더 작게 */
+  html[lang="ja"] .hero h1 { font-size: clamp(26px, 8vw, 64px); }
+  .hero .genre { margin-top: 10px; font-size: clamp(18px, 3.6vw, 24px); color: var(--amber); }
+  .hero p.lead { margin: 14px auto 0; max-width: 560px; font-size: clamp(17px, 3.2vw, 21px); color: var(--ink); }
+  .stores { margin: 26px auto 0; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .store {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 22px; border-radius: 16px; text-decoration: none;
+    font-size: 17px; font-family: var(--font);
+    border: 3px solid var(--ink-deep);
+    box-shadow: 0 4px 0 var(--ink-deep);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .store svg { width: 22px; height: 22px; }
+  .store.ios { background: var(--ink-deep); color: var(--white); }
+  .store.ios:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--ink-deep); }
+  .store.soon { background: var(--white); color: var(--sub); border-color: #CFC3B5; box-shadow: 0 4px 0 #CFC3B5; cursor: default; }
+  .island {
+    position: relative; margin: 34px auto 0; max-width: 1180px;
+    border-radius: 28px 28px 0 0; overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .island img { width: 100%; aspect-ratio: 3840 / 1646; object-fit: cover; }
+  .island::after { /* 아래 가장자리를 땅 색으로 녹인다 */
+    content: ""; position: absolute; inset: auto 0 0 0; height: 18%;
+    background: linear-gradient(180deg, rgba(253,246,241,0) 0%, var(--ground) 100%);
+  }
+
+  /* ── 공통 섹션 ── */
+  section { padding: 72px 16px; }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  .eyebrow { display: inline-block; font-size: 15px; color: var(--amber); background: var(--amber-soft); padding: 4px 12px; border-radius: 999px; }
+  h2 { margin-top: 12px; font-size: clamp(30px, 6vw, 44px); line-height: 1.2; text-wrap: balance; word-break: keep-all; }
+  /* 일본어 제목은 단어 중간에서 끊기지 않게(구절 단위) + 폰 폭에 한 줄로 */
+  html[lang="ja"] h2 { font-size: clamp(24px, 6.4vw, 44px); word-break: auto-phrase; }
+  .section-lead { margin-top: 10px; font-size: 18px; color: var(--sub); max-width: 620px; }
+  .center { text-align: center; }
+  .center .section-lead { margin-left: auto; margin-right: auto; }
+
+  /* ── 기능 카드 ── */
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-top: 34px; }
+  .card {
+    background: var(--white); border-radius: 24px; padding: 22px 20px 24px;
+    box-shadow: var(--shadow); text-align: center;
+    border: 3px solid transparent; transition: transform .2s, border-color .2s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--sea); }
+  .card .pet { height: 118px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 12px; }
+  .card .pet img { height: 110px; width: auto; }
+  .card h3 { font-size: 22px; color: var(--ink-deep); }
+  .card p { margin-top: 6px; font-size: 16px; color: var(--sub); }
+  .card .num { display: inline-block; margin-top: 10px; font-size: 14px; color: var(--amber); background: var(--amber-soft); padding: 2px 10px; border-radius: 999px; }
+
+  /* ── 풀장 띠 (튜브냥이 떠다닌다) ── */
+  .pool {
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, var(--sea-light) 0%, var(--sea) 100%);
+    padding: 64px 16px 80px;
+  }
+  .pool .ripple { position: absolute; height: 3px; border-radius: 3px; background: rgba(255,255,255,.8); animation: drift 7s ease-in-out infinite; }
+  .floaters { position: relative; height: 170px; max-width: 900px; margin: 30px auto 0; }
+  .floater { position: absolute; bottom: 0; width: 120px; }
+  .floater.f1 { left: 4%;  animation: float1 9s ease-in-out infinite; }
+  .floater.f2 { left: 40%; animation: float2 11s ease-in-out infinite; width: 108px; }
+  .floater.f3 { left: 72%; animation: float3 10s ease-in-out infinite; width: 132px; }
+  .pool h2, .pool .section-lead { position: relative; }
+  .pool .section-lead { color: var(--ink); }
+
+  /* ── 무대 (냥냥뮤직) ── */
+  .stage-wrap { background: linear-gradient(180deg, var(--ground) 0%, #FFF7D9 100%); }
+  .stage {
+    position: relative; margin: 36px auto 0; max-width: 860px;
+    padding: 30px 16px 22px; border-radius: 28px;
+    background: radial-gradient(ellipse at 50% 120%, #FFE79A 0%, #FFF7D9 60%, transparent 75%);
+  }
+  .dancers { display: flex; justify-content: center; align-items: flex-end; gap: clamp(4px, 2vw, 22px); flex-wrap: wrap; }
+  .dancers img { height: clamp(86px, 17vw, 140px); width: auto; }
+  .dancers .dj { height: clamp(100px, 20vw, 162px); }
+  .floor {
+    height: 18px; margin: 6px auto 0; max-width: 760px; border-radius: 999px;
+    background: repeating-linear-gradient(90deg, #FF9AA2 0 40px, #FFE07A 40px 80px, #8FE3C9 80px 120px, #A9C8FF 120px 160px, #D9B7FF 160px 200px);
+    opacity: .75; animation: lights 2.4s linear infinite;
+  }
+
+  /* ── 스크린샷 ── */
+  .shots {
+    display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 30px 4px 18px; margin-top: 6px; -webkit-overflow-scrolling: touch;
+  }
+  .shots img {
+    flex: 0 0 auto; width: clamp(200px, 42vw, 260px); scroll-snap-align: center;
+    border-radius: 26px; box-shadow: var(--shadow); border: 4px solid var(--white);
+  }
+  .shots::-webkit-scrollbar { height: 8px; }
+  .shots::-webkit-scrollbar-thumb { background: #E3D6C6; border-radius: 8px; }
+
+  /* ── 고객 지원 ── */
+  .support { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 30px; }
+  .support a {
+    display: flex; align-items: center; gap: 16px; padding: 22px; border-radius: 22px;
+    background: var(--white); box-shadow: var(--shadow); text-decoration: none;
+    transition: transform .2s;
+  }
+  .support a:hover { transform: translateY(-3px); }
+  .support .ic { flex: 0 0 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 26px; }
+  .support .ic.mail { background: var(--amber-soft); }
+  .support .ic.doc { background: var(--sea-light); }
+  .support b { display: block; font-weight: normal; font-size: 19px; color: var(--ink-deep); }
+  .support small { display: block; font-size: 14px; color: var(--sub); word-break: break-all; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+
+  footer { padding: 34px 16px 46px; text-align: center; color: var(--sub); font-size: 14px; }
+  footer img { width: 72px; margin: 0 auto 10px; }
+
+  /* ── 움직임 ── */
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
+  @keyframes float1 { 0%,100% { transform: translate(0, 0); } 30% { transform: translate(40px, -10px); } 65% { transform: translate(14px, 6px); } }
+  @keyframes float2 { 0%,100% { transform: translate(0, 0); } 40% { transform: translate(-36px, -8px); } 75% { transform: translate(20px, 4px); } }
+  @keyframes float3 { 0%,100% { transform: translate(0, 0); } 35% { transform: translate(-30px, 6px); } 70% { transform: translate(-6px, -10px); } }
+  @keyframes drift { 0%,100% { transform: translateX(0); opacity: .35; } 50% { transform: translateX(24px); opacity: .9; } }
+  @keyframes lights { to { background-position: 200px 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+  @media (max-width: 520px) {
+    .brand span { display: none; }
+    .sticker { -webkit-text-stroke-width: 5px; }
+    .floater { width: 92px; } .floater.f2 { width: 84px; } .floater.f3 { width: 100px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="#top"><img src="img/icon.png" alt=""><span data-i18n="name">냥냥아일랜드</span></a>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="ko">한국어</button>
+    <button type="button" data-lang="en">EN</button>
+    <button type="button" data-lang="ja">日本語</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <img class="hero-icon" src="img/icon.png" alt="">
+    <h1 class="sticker" data-i18n="name">냥냥아일랜드</h1>
+    <div class="genre" data-i18n="genre">고양이 키우기 타이쿤</div>
+    <p class="lead" data-i18n="lead">외향형 고양이들이 사는 작은 섬.<br>온천·캠프·풀장·DJ 무대까지, 나만의 고양이 휴양지를 키워 보세요.</p>
+    <div class="stores">
+      <a class="store ios" href="https://apps.apple.com/app/id6761288407" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        <span data-i18n="appstore">App Store에서 다운로드</span>
+      </a>
+      <span class="store soon" aria-disabled="true">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
+        <span data-i18n="playsoon">Google Play 곧 출시</span>
+      </span>
+    </div>
+    <div class="island"><img src="img/island.webp" alt="" data-i18n-alt="islandAlt"></div>
+  </section>
+
+  <section>
+    <div class="wrap center">
+      <span class="eyebrow" data-i18n="featEyebrow">섬 생활</span>
+      <h2 data-i18n="featTitle">고양이들의 하루를 꾸며 주세요</h2>
+      <p class="section-lead" data-i18n="featLead">가게를 열고, 휴양지를 짓고, 손님 고양이들과 놀아 주세요. 섬은 조금씩 넓어져요.</p>
+      <div class="features">
+        <div class="card">
+          <div class="pet"><img data-anim="oncheon" data-frames="3" data-step="420" src="img/cats/oncheon_1.webp" alt=""></div>
+          <h3 data-i18n="f1t">고양이 휴양지</h3>
+          <p data-i18n="f1d">온천, 캠프, 풀장, 영화관, DJ 무대… 휴양지마다 고양이들이 저마다 쉬고 놀아요.</p>
+          <span class="num" data-i18n="f1n">휴양지 20곳</span>
+        </div>
+        <div class="card">
+          <div class="pet"><img data-anim="barcat1" data-frames="3" data-step="420" src="img/cats/barcat1_1.webp" alt=""></div>
+          <h3 data-i18n="f2t">고양이 가게</h3>
+          <p data-i18n="f2d">주스 가게부터 랍스터 식당까지. 쌓인 캣냥을 톡톡 모아 가게를 키워요.</p>
+          <span class="num" data-i18n="f2n">가게 26곳</span>
+        </div>
+        <div class="card">
+          <div class="pet"><img data-anim="msg" data-frames="3" data-step="420" src="img/cats/msg_1.webp" alt=""></div>
+          <h3 data-i18n="f3t">고양이와 놀아 주기</h3>
+          <p data-i18n="f3d">쓰다듬기, 장작 넣기, 컵 속 연어 찾기, 냥냥 두더지로 하트를 모아요.</p>
+          <span class="num" data-i18n="f3n">미니게임 4종</span>
+        </div>
+        <div class="card">
+          <div class="pet"><img data-anim="sleep1" data-frames="2" data-step="900" src="img/cats/sleep1_1.webp" alt=""></div>
+          <h3 data-i18n="f4t">꺼 둬도 자라는 섬</h3>
+          <p data-i18n="f4d">앱을 닫아도 가게 매출과 휴양지 하트가 쌓여요. 잠깐 들러 모으기만 하면 돼요.</p>
+          <span class="num" data-i18n="f4n">최대 8시간</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pool">
+    <span class="ripple" style="left:8%;top:22%;width:90px"></span>
+    <span class="ripple" style="left:62%;top:16%;width:120px;animation-delay:-2s"></span>
+    <span class="ripple" style="left:30%;top:70%;width:70px;animation-delay:-4s"></span>
+    <span class="ripple" style="left:80%;top:62%;width:100px;animation-delay:-1s"></span>
+    <div class="wrap center">
+      <h2 class="sticker" data-i18n="poolTitle">둥실둥실, 오늘도 휴가 중</h2>
+      <p class="section-lead" data-i18n="poolLead">풀장의 튜브냥들은 물 위를 느긋하게 떠다녀요.</p>
+    </div>
+    <div class="floaters">
+      <img class="floater f1" data-anim="swim" data-frames="3" data-step="420" src="img/cats/swim_1.webp" alt="">
+      <img class="floater f2" data-anim="ttube" data-frames="3" data-step="460" src="img/cats/ttube_1.webp" alt="">
+      <img class="floater f3" data-anim="tube" data-frames="3" data-step="440" src="img/cats/tube_1.webp" alt="">
+    </div>
+  </section>
+
+  <section class="stage-wrap">
+    <div class="wrap center">
+      <span class="eyebrow" data-i18n="stageEyebrow">냥냥뮤직</span>
+      <h2 data-i18n="stageTitle">밤엔 다 같이 파티 타임!</h2>
+      <p class="section-lead" data-i18n="stageLead">DJ냥이 음악을 틀면 댄스냥들이 무대로 모여요.</p>
+      <div class="stage">
+        <div class="dancers">
+          <img data-anim="hula1" data-frames="4" data-step="450" src="img/cats/hula1_1.webp" alt="">
+          <img data-anim="ballet" data-frames="13" data-step="280" src="img/cats/ballet_1.webp" alt="">
+          <img class="dj" data-anim="djcat" data-frames="4" data-step="400" src="img/cats/djcat_1.webp" alt="">
+          <img data-anim="hula2" data-frames="4" data-step="470" src="img/cats/hula2_1.webp" alt="">
+          <img data-anim="drum" data-frames="2" data-step="300" src="img/cats/drum_1.webp" alt="">
+        </div>
+        <div class="floor"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap center">
+      <span class="eyebrow" data-i18n="shotEyebrow">미리 보기</span>
+      <h2 data-i18n="shotTitle">섬 구경하기</h2>
+    </div>
+    <div class="wrap">
+      <div class="shots" id="shots"></div>
+    </div>
+  </section>
+
+  <section id="support">
+    <div class="wrap center">
+      <span class="eyebrow" data-i18n="supEyebrow">고객 지원</span>
+      <h2 data-i18n="supTitle">도움이 필요하신가요?</h2>
+      <p class="section-lead" data-i18n="supLead">게임 안 설정 › 문의하기/오류 신고에서 보내 주시면 기기 정보가 함께 담겨 더 빨리 도와드릴 수 있어요.</p>
+      <div class="support">
+        <a href="mailto:official.nini.universe@gmail.com">
+          <span class="ic mail" aria-hidden="true">✉️</span>
+          <span><b data-i18n="supMail">문의하기 · 오류 신고</b><small>official.nini.universe@gmail.com</small></span>
+        </a>
+        <a href="https://silicon-protest-e3b.notion.site/331ac1722f9780d9a58fdacd7ad65cfa" target="_blank" rel="noopener">
+          <span class="ic doc" aria-hidden="true">📄</span>
+          <span><b data-i18n="supPrivacy">개인정보처리방침</b><small data-i18n="supPrivacySub">수집하는 정보와 광고에 대한 안내</small></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <img data-anim="hula1" data-frames="4" data-step="500" src="img/cats/hula1_1.webp" alt="">
+  <div>© 2026 NINI Universe. All rights reserved.</div>
+</footer>
+
+<script>
+  // ── 문구 (ko / en / ja) — 이름·기능 이름은 게임 안 번역과 같다 ──
+  const T = {
+    ko: {
+      _title: '냥냥아일랜드 - 고양이 키우기 타이쿤',
+      name: '냥냥아일랜드', genre: '고양이 키우기 타이쿤',
+      lead: '외향형 고양이들이 사는 작은 섬.<br>온천·캠프·풀장·DJ 무대까지, 나만의 고양이 휴양지를 키워 보세요.',
+      appstore: 'App Store에서 다운로드', playsoon: 'Google Play 곧 출시',
+      islandAlt: '휴양지와 고양이들로 가득한 냥냥아일랜드의 섬',
+      featEyebrow: '섬 생활', featTitle: '고양이들의 하루를 꾸며 주세요',
+      featLead: '가게를 열고, 휴양지를 짓고, 손님 고양이들과 놀아 주세요. 섬은 조금씩 넓어져요.',
+      f1t: '고양이 휴양지', f1d: '온천, 캠프, 풀장, 영화관, DJ 무대… 휴양지마다 고양이들이 저마다 쉬고 놀아요.', f1n: '휴양지 20곳',
+      f2t: '고양이 가게', f2d: '주스 가게부터 랍스터 식당까지. 쌓인 캣냥을 톡톡 모아 가게를 키워요.', f2n: '가게 26곳',
+      f3t: '고양이와 놀아 주기', f3d: '쓰다듬기, 장작 넣기, 컵 속 연어 찾기, 냥냥 두더지로 하트를 모아요.', f3n: '미니게임 4종',
+      f4t: '꺼 둬도 자라는 섬', f4d: '앱을 닫아도 가게 매출과 휴양지 하트가 쌓여요. 잠깐 들러 모으기만 하면 돼요.', f4n: '최대 8시간',
+      poolTitle: '둥실둥실, 오늘도 휴가 중', poolLead: '풀장의 튜브냥들은 물 위를 느긋하게 떠다녀요.',
+      stageEyebrow: '냥냥뮤직', stageTitle: '밤엔 다 같이 파티 타임!', stageLead: 'DJ냥이 음악을 틀면 댄스냥들이 무대로 모여요.',
+      shotEyebrow: '미리 보기', shotTitle: '섬 구경하기',
+      supEyebrow: '고객 지원', supTitle: '도움이 필요하신가요?',
+      supLead: '게임 안 설정 › 문의하기/오류 신고에서 보내 주시면 기기 정보가 함께 담겨 더 빨리 도와드릴 수 있어요.',
+      supMail: '문의하기 · 오류 신고', supPrivacy: '개인정보처리방침', supPrivacySub: '수집하는 정보와 광고에 대한 안내',
+    },
+    en: {
+      _title: 'Meow Meow Island: Cat Tycoon',
+      name: 'Meow Meow Island', genre: 'Cat Tycoon',
+      lead: 'A little island full of outgoing cats.<br>From hot springs and campfires to pools and a DJ stage — build your own cat resort.',
+      appstore: 'Download on the App Store', playsoon: 'Coming soon to Google Play',
+      islandAlt: 'Meow Meow Island, filled with resorts and cats',
+      featEyebrow: 'Island life', featTitle: "Fill your cats' days with fun",
+      featLead: 'Open shops, build resorts and play with your cat guests. Your island grows little by little.',
+      f1t: 'Cat resorts', f1d: 'Hot springs, camps, pools, a movie night, a DJ stage… every resort has cats relaxing in their own way.', f1n: '20 resorts',
+      f2t: 'Cat shops', f2d: 'From a juice stand to a lobster restaurant. Tap to collect Meowney and grow your shops.', f2n: '26 shops',
+      f3t: 'Play with your cats', f3d: 'Pet them, feed the fire, find the salmon under the cups and play Whack-a-Cat to earn hearts.', f3n: '4 mini games',
+      f4t: 'Grows while you’re away', f4d: 'Shops keep earning and resorts keep making hearts even when the app is closed. Just pop in and collect.', f4n: 'Up to 8 hours',
+      poolTitle: 'Floating away on vacation', poolLead: 'The tube cats drift lazily around the pool.',
+      stageEyebrow: 'Meow Meow Music', stageTitle: 'Party time tonight!', stageLead: 'When DJ Cat starts the music, the dancers hit the stage.',
+      shotEyebrow: 'Preview', shotTitle: 'Take a look around',
+      supEyebrow: 'Support', supTitle: 'Need a hand?',
+      supLead: 'Send us a message from Settings › Contact / Bug Report in the game — your device info is included so we can help faster.',
+      supMail: 'Contact · Bug Report', supPrivacy: 'Privacy Policy', supPrivacySub: 'What we collect and how ads work',
+    },
+    ja: {
+      _title: 'にゃんにゃんアイランド - ねこ経営タイクーン',
+      name: 'にゃんにゃんアイランド', genre: 'ねこ経営タイクーン',
+      lead: '社交的なねこたちが暮らす小さな島。<br>温泉・キャンプ・プール・DJステージまで、あなただけのねこリゾートを育てよう。',
+      appstore: 'App Storeでダウンロード', playsoon: 'Google Play 近日公開',
+      islandAlt: 'リゾートとねこでいっぱいのにゃんにゃんアイランド',
+      featEyebrow: '島の暮らし', featTitle: 'ねこたちの毎日を彩ろう',
+      featLead: 'お店を開いて、リゾートを建てて、お客さんのねこと遊ぼう。島は少しずつ広がっていきます。',
+      f1t: 'ねこのリゾート', f1d: '温泉、キャンプ、プール、映画館、DJステージ…どのリゾートでもねこたちが思い思いにくつろぎます。', f1n: 'リゾート20か所',
+      f2t: 'ねこのお店', f2d: 'ジュース屋さんからロブスターレストランまで。たまったにゃんコインをタップで集めてお店を育てよう。', f2n: 'お店26軒',
+      f3t: 'ねこと遊ぼう', f3d: 'なでなで、薪くべ、サーモン探しのカップゲーム、にゃんこもぐらでハートを集めよう。', f3n: 'ミニゲーム4種',
+      f4t: '閉じていても育つ島', f4d: 'アプリを閉じている間も、お店の売上とリゾートのハートがたまります。ちょっと立ち寄って集めるだけ。', f4n: '最大8時間',
+      poolTitle: 'ぷかぷか、今日もバカンス', poolLead: 'プールの浮き輪ねこたちは、水の上をのんびり漂います。',
+      stageEyebrow: 'にゃんにゃんミュージック', stageTitle: '夜はみんなでパーティー！', stageLead: 'DJねこが音楽をかけると、ダンスねこたちがステージに集まります。',
+      shotEyebrow: 'プレビュー', shotTitle: '島をのぞいてみよう',
+      supEyebrow: 'サポート', supTitle: 'お困りですか？',
+      supLead: 'ゲーム内の設定 › お問い合わせ/不具合報告から送っていただくと、端末情報が添えられるのでより早くお手伝いできます。',
+      supMail: 'お問い合わせ · 不具合報告', supPrivacy: 'プライバシーポリシー', supPrivacySub: '収集する情報と広告について',
+    },
+  };
+
+  const SHOT_COUNT = 6;
+
+  function pickLang() {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (T[q]) return q;
+    try { const s = localStorage.getItem('mmi-lang'); if (T[s]) return s; } catch (e) {}
+    const n = (navigator.language || 'ko').toLowerCase();
+    if (n.startsWith('ja')) return 'ja';
+    if (n.startsWith('ko')) return 'ko';
+    return 'en';
+  }
+
+  function apply(lang) {
+    const t = T[lang];
+    document.documentElement.lang = lang;
+    document.title = t._title;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const v = t[el.dataset.i18n]; if (v != null) el.innerHTML = v;
+    });
+    document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+      const v = t[el.dataset.i18nAlt]; if (v != null) el.alt = v;
+    });
+    document.querySelectorAll('.lang button').forEach(b =>
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    const shots = document.getElementById('shots');
+    shots.innerHTML = '';
+    for (let i = 1; i <= SHOT_COUNT; i++) {
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.src = `img/shots/${lang}/0${i}.webp`;
+      img.alt = `${t.name} ${i}`;
+      shots.appendChild(img);
+    }
+    try { localStorage.setItem('mmi-lang', lang); } catch (e) {}
+  }
+
+  document.querySelectorAll('.lang button').forEach(b =>
+    b.addEventListener('click', () => apply(b.dataset.lang)));
+  apply(pickLang());
+
+  // ── 고양이 애니메이션: 게임과 같은 프레임 그림을 같은 간격으로 돌린다 ──
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('img[data-anim]').forEach(img => {
+    const id = img.dataset.anim, n = +img.dataset.frames, step = +img.dataset.step;
+    for (let i = 1; i <= n; i++) { const p = new Image(); p.src = `img/cats/${id}_${i}.webp`; }
+    if (reduce || n < 2) return;
+    let f = 1;
+    const tick = () => {
+      f = f % n + 1;
+      img.src = `img/cats/${id}_${f}.webp`;
+      // 같은 그림 둘이 같은 박자로 움직이지 않게 조금씩 흔든다
+      setTimeout(tick, step * (0.85 + Math.random() * 0.3));
+    };
+    setTimeout(tick, Math.random() * step);
+  });
+</script>
+</body>
+</html>
