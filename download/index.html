@@ -45,6 +45,7 @@
   @keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
   @media (prefers-reduced-motion: reduce) { .icon, .dots::after { animation: none; } }
 </style>
+<script src="/analytics.js"></script>
 </head>
 <body>
 <div class="box">
@@ -124,7 +125,9 @@
     $('redirectText').textContent = text;
     $('redirectMessage').classList.remove('hidden');
     // 버튼은 숨기지 않는다 — 인스타·유튜브 앱 안 브라우저가 자동 이동을 막으면 직접 누르면 된다
-    setTimeout(() => { location.replace(url); }, 500);
+    // GA(/analytics.js)가 store_click을 보낸 뒤 이동 — 스크립트가 안 올라왔으면 그냥 0.5초 뒤 이동
+    if (window.niniStoreGo) niniStoreGo(url, 500, true);
+    else setTimeout(() => { location.replace(url); }, 500);
   }
 
   const device = detectDevice();
