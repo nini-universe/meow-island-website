@@ -7,9 +7,8 @@
 ## 다운로드 링크 (유튜브·인스타 프로필용)
 `https://nini-universe.github.io/meow-island-website/download/`
 - 아이폰·아이패드 → 0.5초 뒤 App Store로 자동 이동
-- 안드로이드 → Play 출시 전엔 "곧 출시" 안내 + 소개 페이지 버튼.
-  **출시 후 `download/index.html`의 `PLAY_URL` 한 줄만 채우면** 자동 이동한다
-- PC → 자동 이동 없이 App Store·소개 페이지 버튼
+- 안드로이드 → 0.5초 뒤 Google Play로 자동 이동
+- PC → 자동 이동 없이 App Store·Google Play·소개 페이지 버튼
 - 인스타·유튜브 앱 안 브라우저가 자동 이동을 막아도 버튼이 남아 있어 직접 누를 수 있다
 - 메인 소개 페이지(`/meow-island-website/`)는 자동 이동하지 않는다 — 폰에서도 소개를 볼 수 있게
 

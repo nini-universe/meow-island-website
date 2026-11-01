@@ -53,17 +53,15 @@
   <h1 id="name">냥냥아일랜드</h1>
   <div class="genre" id="genre">고양이 키우기 타이쿤</div>
 
-  <!-- 이동 중 안내 (아이폰·Play 출시 후 안드로이드) -->
+  <!-- 이동 중 안내 (아이폰 → App Store, 안드로이드 → Google Play) -->
   <p class="msg hidden" id="redirectMessage"><span id="redirectText">App Store로 이동 중</span><span class="dots"></span></p>
-  <!-- 안드로이드 — Play 출시 전 -->
-  <p class="msg hidden" id="androidSoon"></p>
 
   <div class="btns" id="buttonGroup">
     <a class="btn primary" id="iosButton" href="#">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
       <span id="iosLabel">App Store에서 다운로드</span>
     </a>
-    <a class="btn primary hidden" id="androidButton" href="#">
+    <a class="btn primary" id="androidButton" href="#">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
       <span id="androidLabel">Google Play에서 다운로드</span>
     </a>
@@ -72,23 +70,20 @@
 </div>
 
 <script>
-  // ── 스토어 주소 — Google Play 출시 후 PLAY_URL만 채우면 안드로이드도 자동 이동한다 ──
+  // ── 스토어 주소 ──
   const IOS_URL = 'https://apps.apple.com/app/id6761288407';
-  const PLAY_URL = ''; // 예: 'https://play.google.com/store/apps/details?id=com.nini.catisland'
+  const PLAY_URL = 'https://play.google.com/store/apps/details?id=com.nini.catisland';
 
   const T = {
     ko: { name: '냥냥아일랜드', genre: '고양이 키우기 타이쿤', title: '냥냥아일랜드 다운로드',
           toIos: 'App Store로 이동 중', toPlay: 'Google Play로 이동 중',
-          ios: 'App Store에서 다운로드', android: 'Google Play에서 다운로드', site: '게임 소개 보기',
-          soon: 'Android 버전은 곧 출시돼요!<br>그동안 게임 소개를 구경해 보세요.' },
+          ios: 'App Store에서 다운로드', android: 'Google Play에서 다운로드', site: '게임 소개 보기' },
     en: { name: 'Meow Meow Island', genre: 'Cat Tycoon', title: 'Download Meow Meow Island',
           toIos: 'Opening the App Store', toPlay: 'Opening Google Play',
-          ios: 'Download on the App Store', android: 'Get it on Google Play', site: 'See the game',
-          soon: 'The Android version is coming soon!<br>Take a look around in the meantime.' },
+          ios: 'Download on the App Store', android: 'Get it on Google Play', site: 'See the game' },
     ja: { name: 'にゃんにゃんアイランド', genre: 'ねこ経営タイクーン', title: 'にゃんにゃんアイランド ダウンロード',
           toIos: 'App Storeに移動しています', toPlay: 'Google Playに移動しています',
-          ios: 'App Storeでダウンロード', android: 'Google Playで手に入れよう', site: 'ゲーム紹介を見る',
-          soon: 'Android版はまもなく公開です！<br>それまでゲーム紹介をのぞいてみてください。' },
+          ios: 'App Storeでダウンロード', android: 'Google Playで手に入れよう', site: 'ゲーム紹介を見る' },
   };
 
   function pickLang() {
@@ -118,8 +113,8 @@
   $('androidLabel').textContent = t.android;
   $('siteLabel').textContent = t.site;
   $('iosButton').href = IOS_URL;
+  $('androidButton').href = PLAY_URL;
   $('siteButton').href = '../' + (lang === 'ko' ? '' : '?lang=' + lang);
-  if (PLAY_URL) { $('androidButton').href = PLAY_URL; $('androidButton').classList.remove('hidden'); }
 
   function goTo(url, text) {
     $('redirectText').textContent = text;
@@ -134,13 +129,7 @@
   if (device === 'ios') {
     goTo(IOS_URL, t.toIos);
   } else if (device === 'android') {
-    if (PLAY_URL) {
-      goTo(PLAY_URL, t.toPlay);
-    } else {
-      $('androidSoon').innerHTML = t.soon;
-      $('androidSoon').classList.remove('hidden');
-      $('iosButton').classList.add('hidden');
-    }
+    goTo(PLAY_URL, t.toPlay);
   }
   // 데스크톱: 자동 이동 없이 버튼만
 </script>
